@@ -2,8 +2,6 @@ import _ from 'lodash';
 import frameModel from '../api/v1/frame/frameModel.js';
 import logger from './logger.js';
 
-logger.info('Populating the database with some items');
-
 const frames = [
   {
     name: 'Frame dummy 1',
@@ -55,12 +53,13 @@ var createFrames = (data) => {
 };
 
 export default function populateDatabase() {
-  cleanDatabase()
-    .then(createFrames)
-    .then(() => {
-      logger.info('Populated the database with 3 Frames');
-    })
-    .catch((error) => {
-      logger.error(`Error while populating database: ${error.message}`);
+    logger.info('Populating the database with some items');
+    cleanDatabase()
+        .then(createFrames)
+        .then(() => {
+            logger.info('Populated the database with 3 Frames');
+        })
+        .catch((error) => {
+            logger.error(`Error while populating database: ${error.message}`);
     });
 }

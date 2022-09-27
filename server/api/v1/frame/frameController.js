@@ -19,26 +19,34 @@ export default {
   },
   get: (req, res, next) => {
     model.find({}).then(
-      function (items) {
-        res.json(items);
+      (items) => {
+        res.json({
+        data: items,
+        error: null,
+      });
       },
-      function (err) {
+      (err) => {
         next(err);
       }
     );
   },
   getOne: (req, res) => {
-    res.json(req.frame);
+    res.json({
+        data: req.frame,
+        error: null
+    });
   },
   create: (req, res, next) => {
     const newItem = req.body;
 
     model.create(newItem).then(
-      function (item) {
-        res.json(item);
+      (item) => {
+        res.status(201).json({
+            data: item,
+            error: null,
+        });
       },
-      function (err) {
-        console.error(err);
+      (err) => {
         next(err);
       }
     );
@@ -50,11 +58,14 @@ export default {
 
     _.merge(frame, newItem);
 
-    model.save(function (err, saved) {
+    model.save((err, saved) => {
       if (err) {
         next(err);
       } else {
-        res.json(saved);
+        res.json({
+            data: saved,
+            error: null,
+        });
       }
     });
   },
@@ -63,7 +74,10 @@ export default {
       if (err) {
         next(err);
       } else {
-        res.json(removed);
+        res.json({
+            data: removed,
+            error: null,
+        });
       }
     });
   },
