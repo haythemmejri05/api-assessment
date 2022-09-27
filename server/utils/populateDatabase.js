@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import frameModel from '../api/v1/frame/frameModel.js';
+import lenseModel from '../api/v1/lense/lenseModel.js';
 import logger from './logger.js';
 
 const frames = [
@@ -26,6 +27,33 @@ const frames = [
   },
 ];
 
+const lenses = [
+  {
+    colour: 'blue',
+    description: 'Dummy description 1',
+    prescriptionType: 'fashion',
+    lenseType: 'classic',
+    stock: 100,
+    price: 39.9,
+  },
+  {
+    colour: 'brown',
+    description: 'Dummy description 2',
+    prescriptionType: 'single_vision',
+    lenseType: 'blue_light',
+    stock: 200,
+    price: 59.9,
+  },
+  {
+    colour: 'green',
+    description: 'Dummy description 3',
+    prescriptionType: 'varifocal',
+    lenseType: 'transition',
+    stock: 300,
+    price: 79.9,
+  },
+];
+
 const createDoc = (model, doc) => {
   return new Promise((resolve, reject) => {
     new model(doc).save((err, saved) => {
@@ -36,19 +64,29 @@ const createDoc = (model, doc) => {
 
 var cleanDatabase = () => {
   logger.info('Cleaning the database...');
-  var cleanPromises = [frameModel].map((model) => {
+  var cleanPromises = [frameModel, lenseModel].map((model) => {
     return model.deleteMany().exec();
   });
   return Promise.all(cleanPromises);
 };
 
-var createFrames = (data) => {
-  var promises = frames.map((frame) => {
+const createFrames = (data) => {
+  const promises = frames.map((frame) => {
     return createDoc(frameModel, frame);
   });
 
   return Promise.all(promises).then((frames) => {
-    return _.merge({ frames: frames }, data || {});
+    return _.merge({ frames }, data || {});
+  });
+};
+
+const createLenses = (data) => {
+  const promises = lenses.map((lense) => {
+    return createDoc(lenseModel, lense);
+  });
+
+  return Promise.all(promises).then((lenses) => {
+    return _.merge({ lenses }, data || {});
   });
 };
 
@@ -56,8 +94,9 @@ export default function populateDatabase() {
     logger.info('Populating the database with some items');
     cleanDatabase()
         .then(createFrames)
+        .then(createLenses)
         .then(() => {
-            logger.info('Populated the database with 3 Frames');
+            logger.info(`Populated the database with ${frames.length} Frames and ${lenses.length} Lenses`);
         })
         .catch((error) => {
             logger.error(`Error while populating database: ${error.message}`);
