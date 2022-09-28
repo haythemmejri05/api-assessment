@@ -70,7 +70,7 @@ export default {
     });
   },
   delete: (req, res, next) => {
-    req.frame.remove((err, removed) => {
+    req.user.remove((err, removed) => {
       if (err) {
         next(err);
       } else {

@@ -3,7 +3,10 @@ import _ from 'lodash';
 
 export default {
   params: (req, res, next, id) => {
-    model.findById(id).then(
+    model.findById(id)
+    .populate('createdBy', 'username')
+    .exec()
+    .then(
       (item) => {
         if (!item) {
           next(new Error('No lense with that id'));
@@ -18,7 +21,10 @@ export default {
     );
   },
   get: (req, res, next) => {
-    model.find({}).then(
+    model.find({})
+    .populate('createdBy', 'username')
+    .exec()
+    .then(
       (items) => {
         res.json({
         data: items,
@@ -38,6 +44,7 @@ export default {
   },
   create: (req, res, next) => {
     const newItem = req.body;
+    newItem.createdBy = req.user._id;
 
     model.create(newItem).then(
       (item) => {
@@ -70,7 +77,7 @@ export default {
     });
   },
   delete: (req, res, next) => {
-    req.frame.remove((err, removed) => {
+    req.lense.remove((err, removed) => {
       if (err) {
         next(err);
       } else {

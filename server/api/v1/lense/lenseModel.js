@@ -27,6 +27,14 @@ const lenseSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'user'
+  },
+  createdAt: {
+    type: Date,
+    required: false,
+  },
 });
 
 export default mongoose.model('lense', lenseSchema);
