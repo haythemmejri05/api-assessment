@@ -30,7 +30,15 @@ const frameSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     required: false,
+    default: (new Date()),
   },
+});
+
+frameSchema.pre('save', function(next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = this.encryptPassword(this.password);
+  next();
 });
 
 export default mongoose.model('frame', frameSchema);

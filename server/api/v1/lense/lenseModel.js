@@ -34,6 +34,7 @@ const lenseSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     required: false,
+    default: (new Date()),
   },
 });
 

@@ -1,9 +1,15 @@
-import model from './userModel.js';
 import _ from 'lodash';
+import model from './userModel.js';
+import authMiddleware from '../../../middleware/authMiddleware.js';
+
+const signToken = authMiddleware.signToken;
 
 export default {
   params: (req, res, next, id) => {
-    model.findById(id).then(
+    model.findById(id)
+    .select('-password')
+    .exec()
+    .then(
       (item) => {
         if (!item) {
           next(new Error('No user with that id'));
@@ -18,7 +24,10 @@ export default {
     );
   },
   get: (req, res, next) => {
-    model.find({}).then(
+    model.find({})
+    .select('-password')
+    .exec()
+    .then(
       (items) => {
         res.json({
         data: items,
@@ -80,5 +89,9 @@ export default {
         });
       }
     });
+  },
+  signIn: (req, res) => {
+    const userToken = signToken(req.user._id);
+    res.json({ token: userToken });
   },
 };

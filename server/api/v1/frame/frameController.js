@@ -44,6 +44,7 @@ export default {
   },
   create: (req, res, next) => {
     const newItem = req.body;
+    console.log("here2:", req.user);
     newItem.createdBy = req.user._id;
 
     model.create(newItem).then(
