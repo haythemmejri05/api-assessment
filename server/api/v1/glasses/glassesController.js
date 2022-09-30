@@ -47,8 +47,17 @@ export default {
       return;
     }
 
+    const { _id, frameId, lenseId } = req.glasses;
+
+    const price = req.glasses.price[currency];
+
     res.json({
-      data: req.glasses,
+      data: {
+        _id,
+        frameId,
+        lenseId,
+        price,
+      },
       error: null,
     });
   },
@@ -119,7 +128,7 @@ export default {
                 frameId,
                 lenseId,
                 price,
-              } ,
+              },
               error: null,
           });
         }, (err) => {

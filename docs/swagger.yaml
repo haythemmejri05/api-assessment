@@ -580,6 +580,14 @@ paths:
       operationId: addNewGlasses
       tags:
         - user-glasses
+      parameters:
+        - in: query
+          name: currency
+          schema:
+            type: string
+          required: true
+          description: Currency of the user
+          example: GBP
       requestBody:
         required: true
         content:
@@ -621,6 +629,13 @@ paths:
             type: string
           required: true
           description: ID of the glasses to get
+        - in: query
+          name: currency
+          schema:
+            type: string
+          required: true
+          description: Currency of the user
+          example: GBP
       responses:
         200:
           description: OK
