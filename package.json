@@ -47,7 +47,9 @@
     "lodash": "^4.17.21",
     "log4js": "^6.6.1",
     "mongoose": "^6.6.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "swagger-ui-express": "^4.5.0",
+    "yamljs": "^0.3.0"
   },
   "husky": {
     "hooks": {

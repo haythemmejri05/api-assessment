@@ -1,4 +1,6 @@
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 const app = express();
 
 import mongoose from 'mongoose';
@@ -19,8 +21,17 @@ if (config.populateDatabase) {
 import setupGlobalMiddlewares from './middleware/globalMiddlewares.js';
 setupGlobalMiddlewares(app);
 
+// Setup healthcheck route
+app.use('/healthcheck', (req, res) => {
+  res.send("OK");
+});
+
 // Setup API routes
 app.use('/api', api);
+
+// Adding Swagger Documentation
+const swaggerDocument = YAML.load('./docs/swagger.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // eslint-disable-next-line  no-unused-vars
 app.use(function (error, req, res, next) {

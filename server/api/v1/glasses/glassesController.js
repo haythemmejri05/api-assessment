@@ -2,8 +2,6 @@ import model from './glassesModel.js';
 import frameModel from '../frame/frameModel.js';
 import lenseModel from '../lense/lenseModel.js';
 import currencies from '../../../utils/currencies.js';
-import customTypes from '../../../utils/customTypes.js';
-//import _ from 'lodash';
 
 export default {
   params: (req, res, next, id) => {
