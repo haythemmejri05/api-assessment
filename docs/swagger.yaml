@@ -576,8 +576,7 @@ paths:
     post:
       summary: Create a new glasses
       description: Create a new glasses.
-      security:
-        - authzero: []
+      security: []
       operationId: addNewGlasses
       tags:
         - user-glasses
@@ -611,8 +610,7 @@ paths:
     get:
       summary: Get a specific glasses
       description: Get a specific glasses.
-      security:
-        - authzero: []
+      security: []
       operationId: getSpecificGlasses
       tags:
         - user-glasses
@@ -639,8 +637,7 @@ paths:
     delete:
       summary: Remove a specific glasses
       description: Remove a specific glasses.
-      security:
-        - authzero: []
+      security: []
       operationId: removeSpecificGlasses
       tags:
         - user-glasses
