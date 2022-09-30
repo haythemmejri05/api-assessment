@@ -7,18 +7,24 @@ info:
   version: 1.0.0
 
   servers:
+  - url: https://api-assessment-test.herokuapp.com/api/v1
+    description: Heroku production environment
   - url: /api/v1
     description: Review Branch v1
 
   tags:
   - name: admin
-    description: Admins API
-  - name: user
-    description: Users API
-  - name: health
-    description: Service health
-  - name: swagger
-    description: Usage documentation
+    description: Admin API
+  - name: admin-frame
+    description: Admin Frame API
+  - name: admin-lense
+    description: Admin Lense API
+  - name: user-frame
+    description: User Frame API
+  - name: user-lense
+    description: User Lense API
+  - name: user-glasses
+    description: User Glasses API
 
 paths:
   /api/v1/admins/authenticate:
@@ -64,7 +70,7 @@ paths:
         - authzero: []
       operationId: getAllFrames
       tags:
-        - admin
+        - admin-frame
       responses:
         200:
           description: OK
@@ -85,7 +91,7 @@ paths:
         - authzero: []
       operationId: addNewFrame
       tags:
-        - admin
+        - admin-frame
       requestBody:
         required: true
         content:
@@ -144,7 +150,7 @@ paths:
         - authzero: []
       operationId: getSpecificFrames
       tags:
-        - admin
+        - admin-frame
       parameters:
         - in: path
           name: id
@@ -172,7 +178,7 @@ paths:
         - authzero: []
       operationId: updateSpecificFrames
       tags:
-        - admin
+        - admin-frame
       parameters:
         - in: path
           name: id
@@ -237,7 +243,7 @@ paths:
         - authzero: []
       operationId: removeSpecificFrames
       tags:
-        - admin
+        - admin-frame
       parameters:
         - in: path
           name: id
@@ -266,7 +272,7 @@ paths:
         - authzero: []
       operationId: getAllLenses
       tags:
-        - admin
+        - admin-lense
       responses:
         200:
           description: OK
@@ -287,7 +293,7 @@ paths:
         - authzero: []
       operationId: addNewLense
       tags:
-        - admin
+        - admin-lense
       requestBody:
         required: true
         content:
@@ -295,15 +301,18 @@ paths:
             schema:
               type: object
               properties:
-                name:
+                colour:
                   type: string
-                  example: lense 1
+                  example: red
                 description:
                   type: string
                   example: dummy description
-                status:
+                prescriptionType:
                   type: string
-                  example: Active
+                  example: fashion
+                lenseType:
+                  type: string
+                  example: classic
                 stock:
                   type: integer
                   example: 10
@@ -346,7 +355,7 @@ paths:
         - authzero: []
       operationId: getSpecificLenses
       tags:
-        - admin
+        - admin-lense
       parameters:
         - in: path
           name: id
@@ -374,7 +383,7 @@ paths:
         - authzero: []
       operationId: updateSpecificLenses
       tags:
-        - admin
+        - admin-lense
       parameters:
         - in: path
           name: id
@@ -389,15 +398,18 @@ paths:
             schema:
               type: object
               properties:
-                name:
+                colour:
                   type: string
-                  example: lense 1
+                  example: red
                 description:
                   type: string
                   example: dummy description
-                status:
+                prescriptionType:
                   type: string
-                  example: Active
+                  example: fashion
+                lenseType:
+                  type: string
+                  example: classic
                 stock:
                   type: integer
                   example: 10
@@ -439,7 +451,7 @@ paths:
         - authzero: []
       operationId: removeSpecificLenses
       tags:
-        - admin
+        - admin-lense
       parameters:
         - in: path
           name: id
@@ -468,7 +480,7 @@ paths:
       security: []
       operationId: getAllActiveFrames
       tags:
-        - user
+        - user-frame
       responses:
         200:
           description: OK
@@ -489,7 +501,7 @@ paths:
       security: []
       operationId: getSpecificActiveFrames
       tags:
-        - user
+        - user-frame
       parameters:
         - in: path
           name: id
@@ -517,7 +529,7 @@ paths:
       security: []
       operationId: getAllLenses
       tags:
-        - user
+        - user-lense
       responses:
         200:
           description: OK
@@ -538,7 +550,7 @@ paths:
       security: []
       operationId: getSpecificLenses
       tags:
-        - user
+        - user-lense
       parameters:
         - in: path
           name: id
@@ -559,7 +571,99 @@ paths:
           description: Caller has a valid token but it not permitted to call this operation
         500:
           description: Service or a dependency is unhealthy
-  
+
+/api/v1/users/glasses/:
+    post:
+      summary: Create a new glasses
+      description: Create a new glasses.
+      security:
+        - authzero: []
+      operationId: addNewGlasses
+      tags:
+        - user-glasses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                frameId:
+                  type: string
+                  example: frame id
+                lenseId:
+                  type: string
+                  example: lense id
+      responses:
+        201:
+          description: OK
+        204:
+          description: No Content
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        403:
+          description: Caller has a valid token but it not permitted to call this operation
+        500:
+          description: Service or a dependency is unhealthy
+  /api/v1/users/glasses/{id}:
+    get:
+      summary: Get a specific glasses
+      description: Get a specific glasses.
+      security:
+        - authzero: []
+      operationId: getSpecificGlasses
+      tags:
+        - user-glasses
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID of the glasses to get
+      responses:
+        200:
+          description: OK
+        204:
+          description: No Content
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        403:
+          description: Caller has a valid token but it not permitted to call this operation
+        500:
+          description: Service or a dependency is unhealthy
+    delete:
+      summary: Remove a specific glasses
+      description: Remove a specific glasses.
+      security:
+        - authzero: []
+      operationId: removeSpecificGlasses
+      tags:
+        - user-glasses
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID of the glasses to get
+      responses:
+        200:
+          description: OK
+        204:
+          description: No Content
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        403:
+          description: Caller has a valid token but it not permitted to call this operation
+        500:
+          description: Service or a dependency is unhealthy
 
 components:  
   securitySchemes:
