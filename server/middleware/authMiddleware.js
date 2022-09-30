@@ -1,18 +1,15 @@
 import jwt from 'jsonwebtoken';
 import { expressjwt } from "express-jwt";
 import config from '../config/config.js';
-import userModel from '../api/v1/user/userModel.js';
+import adminModel from '../api/v1/admin/adminModel.js';
 
 export default {
     decodeToken: () => {
         return function (req, res, next) {
-            console.log("oifoidsfosd");
             // eslint-disable-next-line  no-prototype-builtins
             if (req.query && req.query.hasOwnProperty('access_token')) {
                 req.headers.authorization = 'Bearer ' + req.query.access_token;
-                console.log("ooooo");
             }
-            console.log(req.headers.authorization);
             const checkToken = expressjwt({ 
                 secret: config.secrets.jwtSecret,
                 algorithms: ["HS256"],
@@ -22,39 +19,20 @@ export default {
     },
     getCaller: () => {
         return function (req, res, next) {
-            userModel.findById(req.auth._id).then((user) => {
-                if(!user) {
+            adminModel.findById(req.auth._id).then((admin) => {
+                if(!admin) {
                     res.status(401).send('Unauthorized');
                     return;
                 }
-                req.user = user;
+                req.admin = admin;
                 next();
             }, (err) => {
                 next(err);
             });
         }
     },
-    checkAdminRole: () => {
+    authenticateAdmin: () => {
         return function (req, res, next) {
-            if(req.user.role !== 'admin') {
-                res.status(401).send('Unauthorized (user role mismatch)');
-                    return;
-            } 
-            next();
-        }
-    },
-    checkUserRole: () => {
-        return function (req, res, next) {
-            if(req.user.role !== 'user') {
-                res.status(401).send('Unauthorized (user role mismatch)');
-                    return;
-            } 
-            next();
-        }
-    },
-    authenticateUser: () => {
-        return function (req, res, next) {
-            console.log(req.body);
             const username = req.body.username;
             const password = req.body.password;
 
@@ -63,16 +41,16 @@ export default {
                 return;
             }
 
-            userModel.findOne({ username }).then((user) => {
-                if(!user) {
+            adminModel.findOne({ username }).then((admin) => {
+                if(!admin) {
                     res.status(401).send('Invalid username');
                     return;
                 } else {
-                    if(!user.authenticate(password)) {
+                    if(!admin.authenticate(password)) {
                         res.status(401).send('Invalid password');
                         return;
                     }
-                    req.user = user;
+                    req.admin = admin;
                     next();
                 }
             }, (err) => {

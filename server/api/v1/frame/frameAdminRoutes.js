@@ -3,11 +3,11 @@ import controller from './frameController.js';
 import authMiddleWare from '../../../middleware/authMiddleware.js';
 const router = express.Router();
 
-const checkAdminMiddlewares = [authMiddleWare.decodeToken(), authMiddleWare.getCaller(), authMiddleWare.checkAdminRole()];
+const checkAdminMiddlewares = [authMiddleWare.decodeToken(), authMiddleWare.getCaller()];
 
 router.param('id', controller.params);
 
-router.route('/').get(checkAdminMiddlewares, controller.create);
+router.route('/').get(checkAdminMiddlewares, controller.get).post(checkAdminMiddlewares, controller.create);
 
 router.route('/:id').get(checkAdminMiddlewares, controller.getOne).put(checkAdminMiddlewares, controller.update).delete(checkAdminMiddlewares, controller.delete);
 

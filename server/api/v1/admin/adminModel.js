@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 //import Int32 from 'mongoose-int32';
 //import Double from '@mongoosejs/double';
 
-const userSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: true,
@@ -21,24 +21,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  role: {
-    type: String,
-    required: true,
-  },
   createdAt: {
     type: Date,
     required: false,
   },
 });
 
-userSchema.pre('save', function(next) {
+adminSchema.pre('save', function(next) {
   if (!this.isModified('password')) return next();
 
   this.password = this.encryptPassword(this.password);
   next();
 });
 
-userSchema.methods = {
+adminSchema.methods = {
   // check the passwords on signin
   authenticate: function(plainTextPword) {
     return bcrypt.compareSync(plainTextPword, this.password);
@@ -60,4 +56,4 @@ userSchema.methods = {
   },
 };
 
-export default mongoose.model('user', userSchema);
+export default mongoose.model('admin', adminSchema);

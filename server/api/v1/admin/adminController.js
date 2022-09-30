@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import model from './userModel.js';
+import model from './adminModel.js';
 import authMiddleware from '../../../middleware/authMiddleware.js';
 
 const signToken = authMiddleware.signToken;
@@ -12,9 +12,9 @@ export default {
     .then(
       (item) => {
         if (!item) {
-          next(new Error('No user with that id'));
+          next(new Error('No admin with that id'));
         } else {
-          req.user = item;
+          req.admin = item;
           next();
         }
       },
@@ -41,7 +41,7 @@ export default {
   },
   getOne: (req, res) => {
     res.json({
-        data: req.user,
+        data: req.admin,
         error: null
     });
   },
@@ -61,11 +61,11 @@ export default {
     );
   },
   update: (req, res, next) => {
-    const user = req.user;
+    const admin = req.admin;
 
     var newItem = req.body;
 
-    _.merge(user, newItem);
+    _.merge(admin, newItem);
 
     model.save((err, saved) => {
       if (err) {
@@ -79,7 +79,7 @@ export default {
     });
   },
   delete: (req, res, next) => {
-    req.user.remove((err, removed) => {
+    req.admin.remove((err, removed) => {
       if (err) {
         next(err);
       } else {
@@ -91,7 +91,7 @@ export default {
     });
   },
   signIn: (req, res) => {
-    const userToken = signToken(req.user._id);
-    res.json({ token: userToken });
+    const adminToken = signToken(req.admin._id);
+    res.json({ token: adminToken });
   },
 };

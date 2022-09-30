@@ -1,12 +1,16 @@
 import express from 'express';
-import frameRoutes from './frame/frameRoutes.js';
-import lenseRoutes from './lense/lenseRoutes.js';
-import userRoutes from './user/userRoutes.js';
+import frameAdminRoutes from './frame/frameAdminRoutes.js';
+import frameUserRoutes from './frame/frameUserRoutes.js';
+import lenseAdminRoutes from './lense/lenseAdminRoutes.js';
+import lenseUserRoutes from './lense/lenseUserRoutes.js';
+import adminRoutes from './admin/adminRoutes.js';
 
 const router = express.Router();
 
-router.use('/v1/frames', frameRoutes);
-router.use('/v1/lenses', lenseRoutes);
-router.use('/v1/users', userRoutes);
+router.use('/v1/admins/frames', frameAdminRoutes);
+router.use('/v1/users/frames', frameUserRoutes);
+router.use('/v1/admins/lenses', lenseAdminRoutes);
+router.use('/v1/users/lenses', lenseUserRoutes);
+router.use('/v1/admins', adminRoutes);
 
 export default router;

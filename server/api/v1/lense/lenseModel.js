@@ -24,12 +24,30 @@ const lenseSchema = new mongoose.Schema({
     required: true,
   },
   price: {
-    type: Number,
-    required: true,
+    USD: {
+      type: Number,
+      required: true,
+    },
+    GBP: {
+      type: Number,
+      required: true,
+    },
+    EUR: {
+      type: Number,
+      required: true,
+    },
+    JOD: {
+      type: Number,
+      required: true,
+    },
+    JPY: {
+      type: Number,
+      required: true,
+    },
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'user'
+    ref: 'admin'
   },
   createdAt: {
     type: Date,

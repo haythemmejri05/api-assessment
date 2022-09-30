@@ -1,5 +1,6 @@
-import model from './frameModel.js';
 import _ from 'lodash';
+import model from './frameModel.js';
+import customTypes from '../../../utils/customTypes.js';
 
 export default {
   params: (req, res, next, id) => {
@@ -36,6 +37,20 @@ export default {
       }
     );
   },
+  getActive: (req, res, next) => {
+    model.find({ status: customTypes.frameStatus.ACTIVE })
+    .then(
+      (items) => {
+        res.json({
+        data: items,
+        error: null,
+      });
+      },
+      (err) => {
+        next(err);
+      }
+    );
+  },
   getOne: (req, res) => {
     res.json({
         data: req.frame,
@@ -44,8 +59,7 @@ export default {
   },
   create: (req, res, next) => {
     const newItem = req.body;
-    console.log("here2:", req.user);
-    newItem.createdBy = req.user._id;
+    newItem.createdBy = req.auth._id;
 
     model.create(newItem).then(
       (item) => {
@@ -66,7 +80,7 @@ export default {
 
     _.merge(frame, newItem);
 
-    model.save((err, saved) => {
+    frame.save((err, saved) => {
       if (err) {
         next(err);
       } else {

@@ -44,7 +44,7 @@ export default {
   },
   create: (req, res, next) => {
     const newItem = req.body;
-    newItem.createdBy = req.user._id;
+    newItem.createdBy = req.auth._id;
 
     model.create(newItem).then(
       (item) => {
@@ -65,7 +65,7 @@ export default {
 
     _.merge(lense, newItem);
 
-    model.save((err, saved) => {
+    lense.save((err, saved) => {
       if (err) {
         next(err);
       } else {
