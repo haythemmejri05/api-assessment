@@ -572,7 +572,7 @@ paths:
         500:
           description: Service or a dependency is unhealthy
 
-/api/v1/users/glasses/:
+  /api/v1/users/glasses/:
     post:
       summary: Create a new glasses
       description: Create a new glasses.
