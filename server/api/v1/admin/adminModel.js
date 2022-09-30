@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-//import Int32 from 'mongoose-int32';
-//import Double from '@mongoosejs/double';
 
 const adminSchema = new mongoose.Schema({
   firstName: {

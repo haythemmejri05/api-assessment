@@ -48,7 +48,7 @@ export default {
       res.status(400).send(`Invalid Currency ${currency}`);
       return;
     }
-    
+
     res.json({
       data: req.glasses,
       error: null,
@@ -113,10 +113,6 @@ export default {
           // Return saved item
           const { _id, frameId, lenseId } = item;
 
-          console.log(newItem);
-          console.log(newItem.price);
-          console.log(currency);
-          console.log(newItem.price[currency]);
           const price = newItem.price[currency];
 
           res.status(201).json({

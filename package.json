@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/haythemmejri05/api-assessment#readme",
   "devDependencies": {
+    "commitlint": "^17.1.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.24.0",
     "husky": "^8.0.1",
@@ -38,17 +39,14 @@
     "supertest": "^6.2.4"
   },
   "dependencies": {
-    "@mongoosejs/double": "^0.3.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
-    "currency-converter-lt": "^1.3.1",
     "express": "^4.18.1",
     "express-jwt": "^7.7.5",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "log4js": "^6.6.1",
     "mongoose": "^6.6.2",
-    "mongoose-int32": "^0.6.0",
     "morgan": "^1.10.0"
   },
   "husky": {

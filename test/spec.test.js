@@ -289,7 +289,6 @@ describe('Glasses', () => {
     });
     expect(res.statusCode).toEqual(201);
     expect(res.body.data).toBeDefined();
-    console.log(res.body.data);
     expect(res.body.data.price > 0).toBeTruthy();
     newGlasses = res.body.data;
   });
