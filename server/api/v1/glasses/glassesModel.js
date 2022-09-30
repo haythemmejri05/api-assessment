@@ -33,10 +33,6 @@ const glassesSchema = new mongoose.Schema({
       required: true,
     },
   },
-  /*createdBy: {
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'admin'
-  },*/
   createdAt: {
     type: Date,
     required: false,

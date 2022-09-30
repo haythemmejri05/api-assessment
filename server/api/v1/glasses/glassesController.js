@@ -2,13 +2,13 @@ import model from './glassesModel.js';
 import frameModel from '../frame/frameModel.js';
 import lenseModel from '../lense/lenseModel.js';
 import currencies from '../../../utils/currencies.js';
+import customTypes from '../../../utils/customTypes.js';
 //import _ from 'lodash';
 
 export default {
   params: (req, res, next, id) => {
     model
       .findById(id)
-      .populate('createdBy', 'username')
       .populate('frameId lenseId')
       .exec()
       .then(
@@ -27,8 +27,7 @@ export default {
   },
   get: (req, res, next) => {
     model
-      .find({ status: "Active" })
-      .populate('createdBy', 'username')
+      .find({})
       .populate('frameId lenseId')
       .exec()
       .then(
@@ -44,6 +43,12 @@ export default {
       );
   },
   getOne: (req, res) => {
+    const currency = req.query.currency;
+    if(!currency || currencies.activeCurrencies.includes(currency) === -1) {
+      res.status(400).send(`Invalid Currency ${currency}`);
+      return;
+    }
+    
     res.json({
       data: req.glasses,
       error: null,
@@ -51,10 +56,9 @@ export default {
   },
   create: async (req, res, next) => {
     const newItem = req.body;
-    //newItem.createdBy = req.user._id;
 
     const currency = req.query.currency;
-    if(currencies.includes(currency) === -1) {
+    if(!currency || currencies.activeCurrencies.includes(currency) === -1) {
       res.status(400).send(`Invalid Currency ${currency}`);
       return;
     }
@@ -62,7 +66,7 @@ export default {
     // Look up the frame in the database
     frameModel.findById(newItem.frameId).then((frame) => {
       if(!frame) {
-        next(new Error(`Cant find frame with ID ${newItem.frameId}`));
+        res.status(400).send(`Cant find frame with ID ${newItem.frameId}`);
         return;
       }
       if(frame.stock < 1) {
@@ -73,14 +77,14 @@ export default {
       // Look up the lense in the database
       lenseModel.findById(newItem.lenseId).then((lense) => {
         if(!lense) {
-          next(new Error(`Cant find lense with ID ${newItem.lenseId}`));
+          res.status(400).send(`Cant find lense with ID ${newItem.lenseId}`);
           return;
         }
         if(lense.stock < 1) {
           res.status(400).send(`Insufficient stock for lense ID ${newItem.lenseId}`);
           return;
         }
-        
+
         newItem.price = {
           USD: frame.price.USD + lense.price.USD,
           GBP: frame.price.GBP + lense.price.GBP,
@@ -92,7 +96,7 @@ export default {
         model.create(newItem).then(async (item) => {
           // Decrement the frame's stock number
           frame.stock -= 1;
-          frameModel.save((err) => {
+          frame.save((err) => {
               if (err) {
                 next(err);
                 return;
@@ -100,7 +104,7 @@ export default {
           });
           // Decrement the lense's stock number
           lense.stock -= 1;
-          lenseModel.save((err) => {
+          lense.save((err) => {
               if (err) {
                 next(err);
                 return;
@@ -108,7 +112,13 @@ export default {
           });
           // Return saved item
           const { _id, frameId, lenseId } = item;
-          const price = item.price[currency];
+
+          console.log(newItem);
+          console.log(newItem.price);
+          console.log(currency);
+          console.log(newItem.price[currency]);
+          const price = newItem.price[currency];
+
           res.status(201).json({
               data: {
                 _id,
@@ -132,13 +142,13 @@ export default {
     // Look up the frame in the database
     frameModel.findById(req.glasses.frameId).then((frame) => {
       if(!frame) {
-        next(new Error(`Cant find frame with ID ${req.glasses.frameId}`));
+        res.status(400).send(`Cant find frame with ID ${req.glasses.frameId}`);
         return;
       }
       // Look up the lense in the database
       lenseModel.findById(req.glasses.lenseId).then((lense) => {
         if(!lense) {
-          next(new Error(`Cant find lense with ID ${req.glasses.lenseId}`));
+          res.status(400).send(`Cant find lense with ID ${req.glasses.lenseId}`);
           return;
         }
         // Remove glasses from the database
@@ -146,10 +156,29 @@ export default {
           if (err) {
             next(err);
           } else {
-            res.json({
-              data: removed,
-              error: null,
-            });
+
+          // Increment the frame's stock number
+          frame.stock += 1;
+          frame.save((err) => {
+              if (err) {
+                next(err);
+                return;
+              }
+          });
+
+          // Increment the lense's stock number
+          lense.stock += 1;
+          lense.save((err) => {
+              if (err) {
+                next(err);
+                return;
+              }
+          });
+
+          res.json({
+            data: removed,
+            error: null,
+          });
           }
         });
       }, (err) => {

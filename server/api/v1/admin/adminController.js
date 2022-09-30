@@ -93,5 +93,6 @@ export default {
   signIn: (req, res) => {
     const adminToken = signToken(req.admin._id);
     res.json({ token: adminToken });
+    return;
   },
 };
