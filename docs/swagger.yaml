@@ -3,7 +3,7 @@ info:
   title: API Assessment
   description: This service provides the way to manage the glasses, frames and lenses e-commerce store.
   contact:
-    name: "BlooBloom"
+    name: "Haythem Mejri"
   version: 1.0.0
 
   servers:
